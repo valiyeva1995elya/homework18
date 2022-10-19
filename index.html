@@ -8,8 +8,16 @@
     <title>Document</title>
     <style>
         body {
+            margin: 2%;
             font-size: 20px;
             background-color: black;
+        }
+
+        .delete {
+            width: 30px;
+            height: 30px;
+            margin-left: 330px;
+            cursor: pointer;
         }
 
         .cards {
@@ -18,6 +26,7 @@
             width: 100%;
             height: 100vh;
             margin: 0 auto;
+
         }
 
         .img {
@@ -27,7 +36,7 @@
 
         .card {
             width: 350px;
-            height: 450px;
+            height: 420px;
             border: 3px solid white;
             border-radius: 12px;
             display: flex;
@@ -53,31 +62,55 @@
             -webkit-box-orient: vertical;
             text-align: justify;
         }
-        .title{
+
+        .title {
             height: 90px;
             font-size: 20px;
+            margin: 0;
+        }
+
+        .price {
+            margin-top: 10px;
+            font-weight: bolder;
+        }
+
+        .modalWin {
+            display: none;
         }
     </style>
 
 </head>
 
 <body>
+    <button onclick="addNewCard" class="btnAdd">Add</button>
+    <div class="modalWin">
+        <input class="newTitle" type="text" placeholder="Title" name="" id="">
+        <input class="newImage" type="text" placeholder="Image" name="" id="">
+        <input class="newPrice" type="text" placeholder="Price" name="" id="">
+        <input class="newRate" type="text" placeholder="Rate" name="" id="">
+        <input class="newCount" type="text" placeholder="Count" name="" id="">
+        <input class="newDescription" type="text" placeholder="Description" name="" id="">
+    </div>
     <div class="cards">
 
 
     </div>
 
-
+    <button></button>
 
     <script>
 
 
-        let doc = [];
+        if ((JSON.parse(localStorage.getItem("cards")).length < 1)) {
+            getData()
+        } else {
+            makeCardBlocks()
+        }
 
-        getData()
 
         function getData() {
             let xhr = new XMLHttpRequest();
+            let doc = [];
             xhr.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     JSON.parse(xhr.response).forEach(element => {
@@ -87,24 +120,44 @@
                     makeCardBlocks()
                 }
             }
-            xhr.open("GET", "https://fakestoreapi.com/products", true);
+            xhr.open("GET", "https://fakestoreapi.com/products", false);
             xhr.send();
+
+            localStorage.setItem("cards", JSON.stringify(doc))
+
         }
         function makeCardBlocks() {
             let elCards = document.querySelector(".cards");
-            doc.forEach(element => {
+            let cardsAll = JSON.parse(localStorage.getItem("cards"))
+            cardsAll.forEach(element => {
                 elCards.innerHTML += `<div class= "card">
+            <img onclick="deleteCard(${element.id})" class = "delete" src="./img/free-icon-cancel-1055185.png" alt="">
             <b><p style="text-align: center" class="title">${element.title}</p></b>
-        <img class = "img" src="${element.image}" alt="">
-        <p class="price">price:${element.price}</p>
-        <div class="card-rating"><p class="rating">rate: ${element.rating.rate}</p><p class="rating"> count: ${element.rating.count}</p></div>
-        <p class="description">${element.description}</p>
-        </div>
+            <img class = "img" src="${element.image}" alt="">
+            <p class="price">price:${element.price}</p>
+            <div class="card-rating"><p class="rating">rate: ${element.rating.rate}</p><p class="rating"> count: ${element.rating.count}</p></div>
+            <p class="description">${element.description}</p>
+            </div>
       `
             }
             )
         }
 
+
+
+        function deleteCard(id) {
+            let cards = JSON.parse(localStorage.getItem("cards"))
+            let elCards = document.querySelector(".cards");
+            let newCards = cards.filter(element => element.id !== id)
+            localStorage.setItem("cards", JSON.stringify(newCards))
+            elCards.innerHTML = ""
+
+            if (cards.length == 1) {
+                getData()
+            } else {
+                makeCardBlocks()
+            }
+        }
 
 
     </script>
