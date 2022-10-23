@@ -8,7 +8,7 @@
     <title>Document</title>
     <style>
         body {
-            margin: 2%;
+            margin: 0;
             font-size: 20px;
             background-color: black;
         }
@@ -75,39 +75,57 @@
         }
 
         .modalWin {
+            width: 250px;
+            height: 330px;
+            text-align: center;
             display: none;
+            background-color: rgb(233, 233, 233);
+            margin: 50px auto;
+            padding-top: 15px;
+            border-radius: 15px;
+            border: 1px solid grey;
+        }
+
+        .block {
+            width: 100%;
+            height: 100vh;
+            background-color: rgb(190, 190, 190, 0.5);
+            display: none;
+            position: fixed;
+            margin-top: -25px;
+        }
+
+        input {
+            margin-bottom: 15px;
         }
     </style>
 
 </head>
 
 <body>
-    <button onclick="addNewCard" class="btnAdd">Add</button>
-    <div class="modalWin">
-        <input class="newTitle" type="text" placeholder="Title" name="" id="">
-        <input class="newImage" type="text" placeholder="Image" name="" id="">
-        <input class="newPrice" type="text" placeholder="Price" name="" id="">
-        <input class="newRate" type="text" placeholder="Rate" name="" id="">
-        <input class="newCount" type="text" placeholder="Count" name="" id="">
-        <input class="newDescription" type="text" placeholder="Description" name="" id="">
+    <button onclick="addNewCard()" class="btnAdd">Add</button>
+    <div class="block">
+        <div class="modalWin">
+            <p>New card</p>
+            <input class="newTitle" type="text" placeholder="Title" name="" id="">
+            <input class="newImage" type="text" placeholder="Image" name="" id="">
+            <input class="newPrice" type="text" placeholder="Price" name="" id="">
+            <input class="newRate" type="text" placeholder="Rate" name="" id="">
+            <input class="newCount" type="text" placeholder="Count" name="" id="">
+            <input class="newDescription" type="text" placeholder="Description" name="" id=""><br>
+            <button onclick="addCard()">Add</button>
+            <button onclick="cancelCard()">Cancel</button>
+        </div>
     </div>
-    <div class="cards">
-
-
-    </div>
-
+    <div class="cards"></div>
     <button></button>
-
     <script>
-
-
-        if ((JSON.parse(localStorage.getItem("cards")).length < 1)) {
-            getData()
-        } else {
-            makeCardBlocks()
-        }
-
-
+        // if ((JSON.parse(localStorage.getItem("cards")).length < 1)) {
+        //     getData()
+        // } else {
+        //     makeCardBlocks()
+        // }
+        getData()
         function getData() {
             let xhr = new XMLHttpRequest();
             let doc = [];
@@ -142,21 +160,69 @@
             }
             )
         }
-
-
-
         function deleteCard(id) {
             let cards = JSON.parse(localStorage.getItem("cards"))
             let elCards = document.querySelector(".cards");
             let newCards = cards.filter(element => element.id !== id)
             localStorage.setItem("cards", JSON.stringify(newCards))
             elCards.innerHTML = ""
-
-            if (cards.length == 1) {
+            // makeCardBlocks()
+            // if(cards.length == false){
+            //     getData()
+            // }
+            if (cards.length == 2) {
                 getData()
             } else {
                 makeCardBlocks()
             }
+        }
+        let modalWin = document.querySelector(".modalWin")
+        let block = document.querySelector(".block")
+        function addNewCard() {
+
+            modalWin.style.display = "block"
+            block.style.display = "block"
+        }
+        function addCard() {
+            let cards = JSON.parse(localStorage.getItem("cards"))
+            let newTitle = document.querySelector(".newTitle").value
+            let newImage = document.querySelector(".newImage").value
+            let newPrice = document.querySelector(".newPrice").value
+            let newRate = document.querySelector(".newRate").value
+            let newCount = document.querySelector(".newCount").value
+            let newDescription = document.querySelector(".newDescription").value
+            let a = []
+            
+            let cardsAll = JSON.parse(localStorage.getItem("cards"))
+            cardsAll.forEach(element => {
+                cards.innerHTML += `<div class= "card">
+            <img onclick="deleteCard(${element.id})" class = "delete" src="./img/free-icon-cancel-1055185.png" alt="">
+            <b><p style="text-align: center" class="title">${newTitle}</p></b>
+            <img class = "img" src="${newImage}" alt="">
+            <p class="price">price:${newPrice}</p>
+            <div class="card-rating"><p class="rating">rate: ${newRate}</p><p class="rating"> count: ${newCount}</p></div>
+            <p class="description">${newDescription}</p>
+            </div>
+      `
+            }
+            )
+            cards.push()
+            for (let i = 0; i < cards.length; i++) {
+                if (saveUser.email == users[i].email) {
+                    users[i].name = saveUser.name
+                    users[i].surname = saveUser.surname
+                    users[i].age = saveUser.age
+                }
+            }
+            localStorage.setItem("saveUser", JSON.stringify(saveUser))
+            localStorage.setItem("users", JSON.stringify(users))
+
+            modalWin.style.display = "none"
+            block.style.display = "none"
+        }
+        function cancelCard() {
+            modalWin.style.display = "none"
+            block.style.display = "none"
         }
 
 
