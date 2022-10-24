@@ -16,7 +16,7 @@
         .delete {
             width: 30px;
             height: 30px;
-            margin-left: 330px;
+            margin-left: 275px;
             cursor: pointer;
         }
 
@@ -35,8 +35,8 @@
         }
 
         .card {
-            width: 350px;
-            height: 420px;
+            width: 300px;
+            height: 350px;
             border: 3px solid white;
             border-radius: 12px;
             display: flex;
@@ -45,12 +45,6 @@
             background-color: white;
             padding: 5px 10px;
             margin: 15px;
-        }
-
-        .card-rating {
-            display: flex;
-            justify-content: space-between;
-            width: 315px;
         }
 
         .description {
@@ -76,7 +70,7 @@
 
         .modalWin {
             width: 250px;
-            height: 330px;
+            height: 265px;
             text-align: center;
 
             background-color: rgb(233, 233, 233);
@@ -110,8 +104,6 @@
             <input class="newTitle" type="text" placeholder="Title" name="" id="">
             <input class="newImage" type="text" placeholder="Image" name="" id="">
             <input class="newPrice" type="text" placeholder="Price" name="" id="">
-            <input class="newRate" type="text" placeholder="Rate" name="" id="">
-            <input class="newCount" type="text" placeholder="Count" name="" id="">
             <input class="newDescription" type="text" placeholder="Description" name="" id=""><br>
             <button onclick="addCard()">Add</button>
             <button onclick="cancelCard()">Cancel</button>
@@ -126,7 +118,7 @@
         } else {
             makeCardBlocks()
         }
-        
+
 
 
 
@@ -157,7 +149,6 @@
             <b><p style="text-align: center" class="title">${element.title}</p></b>
             <img class = "img" src="${element.image}" alt="">
             <p class="price">price:${element.price}</p>
-            <div class="card-rating"><p class="rating"> rate: ${element.rating.rate}</p><p class="rating"> count: ${element.rating.count}</p></div>
             <p class="description">${element.description}</p>
             </div>
       `
@@ -185,23 +176,22 @@
         }
         function addCard(item) {
             let cards = JSON.parse(localStorage.getItem("cards"))
+            let elCards = document.querySelector(".cards");
             let newTitle = document.querySelector(".newTitle").value
             let newImage = document.querySelector(".newImage").value
             let newPrice = document.querySelector(".newPrice").value
-            let newRate = document.querySelector(".newRate").value
-            let newCount = document.querySelector(".newCount").value
             let newDescription = document.querySelector(".newDescription").value
             let newCard = {
-
+                id: +(`${cards.length + 1}`),
                 title: `${newTitle}`,
                 image: `${newImage}`,
                 price: `${newPrice}`,
-                rate: `${newRate}`,
-                count: `${newCount}`,
                 description: `${newDescription}`,
             }
             cards.push(newCard)
             localStorage.setItem("cards", JSON.stringify(cards))
+            elCards.innerHTML = ""
+            makeCardBlocks()
 
             let block = document.querySelector(".block")
             block.style.display = "none"
