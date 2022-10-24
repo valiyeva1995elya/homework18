@@ -78,7 +78,7 @@
             width: 250px;
             height: 330px;
             text-align: center;
-            display: none;
+
             background-color: rgb(233, 233, 233);
             margin: 50px auto;
             padding-top: 15px;
@@ -120,12 +120,16 @@
     <div class="cards"></div>
     <button></button>
     <script>
-        // if ((JSON.parse(localStorage.getItem("cards")).length < 1)) {
-        //     getData()
-        // } else {
-        //     makeCardBlocks()
-        // }
-        getData()
+
+        if (localStorage.getItem("cards") == null || localStorage.getItem("cards").length === 2) {
+            getData()
+        } else {
+            makeCardBlocks()
+        }
+        
+
+
+
         function getData() {
             let xhr = new XMLHttpRequest();
             let doc = [];
@@ -153,7 +157,7 @@
             <b><p style="text-align: center" class="title">${element.title}</p></b>
             <img class = "img" src="${element.image}" alt="">
             <p class="price">price:${element.price}</p>
-            <div class="card-rating"><p class="rating">rate: ${element.rating.rate}</p><p class="rating"> count: ${element.rating.count}</p></div>
+            <div class="card-rating"><p class="rating"> rate: ${element.rating.rate}</p><p class="rating"> count: ${element.rating.count}</p></div>
             <p class="description">${element.description}</p>
             </div>
       `
@@ -166,24 +170,20 @@
             let newCards = cards.filter(element => element.id !== id)
             localStorage.setItem("cards", JSON.stringify(newCards))
             elCards.innerHTML = ""
-            // makeCardBlocks()
-            // if(cards.length == false){
-            //     getData()
-            // }
+
             if (cards.length == 2) {
                 getData()
             } else {
                 makeCardBlocks()
             }
         }
-        let modalWin = document.querySelector(".modalWin")
+
         let block = document.querySelector(".block")
         function addNewCard() {
-
-            modalWin.style.display = "block"
+            let block = document.querySelector(".block")
             block.style.display = "block"
         }
-        function addCard() {
+        function addCard(item) {
             let cards = JSON.parse(localStorage.getItem("cards"))
             let newTitle = document.querySelector(".newTitle").value
             let newImage = document.querySelector(".newImage").value
@@ -191,39 +191,26 @@
             let newRate = document.querySelector(".newRate").value
             let newCount = document.querySelector(".newCount").value
             let newDescription = document.querySelector(".newDescription").value
-            let a = []
-            
-            let cardsAll = JSON.parse(localStorage.getItem("cards"))
-            cardsAll.forEach(element => {
-                cards.innerHTML += `<div class= "card">
-            <img onclick="deleteCard(${element.id})" class = "delete" src="./img/free-icon-cancel-1055185.png" alt="">
-            <b><p style="text-align: center" class="title">${newTitle}</p></b>
-            <img class = "img" src="${newImage}" alt="">
-            <p class="price">price:${newPrice}</p>
-            <div class="card-rating"><p class="rating">rate: ${newRate}</p><p class="rating"> count: ${newCount}</p></div>
-            <p class="description">${newDescription}</p>
-            </div>
-      `
-            }
-            )
-            cards.push()
-            for (let i = 0; i < cards.length; i++) {
-                if (saveUser.email == users[i].email) {
-                    users[i].name = saveUser.name
-                    users[i].surname = saveUser.surname
-                    users[i].age = saveUser.age
-                }
-            }
-            localStorage.setItem("saveUser", JSON.stringify(saveUser))
-            localStorage.setItem("users", JSON.stringify(users))
+            let newCard = {
 
-            modalWin.style.display = "none"
+                title: `${newTitle}`,
+                image: `${newImage}`,
+                price: `${newPrice}`,
+                rate: `${newRate}`,
+                count: `${newCount}`,
+                description: `${newDescription}`,
+            }
+            cards.push(newCard)
+            localStorage.setItem("cards", JSON.stringify(cards))
+
+            let block = document.querySelector(".block")
             block.style.display = "none"
         }
         function cancelCard() {
-            modalWin.style.display = "none"
+            let block = document.querySelector(".block")
             block.style.display = "none"
         }
+
 
 
     </script>
